@@ -1,3 +1,5 @@
+import sys
+sys.path.append(".")
 import allure
 from data import Users
 from pages.home_page import HomePage, HomePageHeader
