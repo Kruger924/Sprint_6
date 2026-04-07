@@ -1,48 +1,23 @@
-import sys
-sys.path.append(".")
-import time
 import allure
 import pytest
-from data import Questions, Urls
-from locators.home_page_locators import HomePageLocators
-from pages.home_page import HomePage, HomePageHeader
-from pages.dzen_page import DzenPage
+
+from data import MAIN_PAGE, ORDER_PAGE, DZEN
+from pages.header_page import HeaderPage
 
 
-class TestMainPage:
-
-    @allure.title('Тест проверки перехода на главную страницу веб-приложенияпо клику на логотип "Самокат"')
-    @allure.description('''1)Нажимаем на кнопку "Заказать"
-                        2)Нажимаем на логотип "Самокат"
-                        3)Сравниваем текущий URL с ожидаемым и отображение надписи - "Учебный проект"''')
-    def test_scooter_logo_click(self, driver):
-        header_page = HomePageHeader(driver)
+class TestHeaderPage:
+    @allure.title('Перенаправление по нажатию на логотип «Яндекс» и «Самокат»')
+    @pytest.mark.parametrize(
+        'name, url',
+        [pytest.param('yandex', DZEN, id='Yandex'),
+         pytest.param('scooter', MAIN_PAGE, id='Scooter')]
+    )
+    def test_logo_click_redirect(self, driver, name, url):
+        '''По нажатию на логотип «Яндекс» открывается страница «Дзен».
+        По нажатию на логотип «Самокат» открывается главная страница.'''
+        header_page = HeaderPage(driver)
         header_page.order_button_click()
-        header_page.scooter_logo_click()
-        current_url = header_page.get_current_url()
-        title_is_displayed = header_page.check_order_title()
-        assert current_url == Urls.QA_SCOOTER_URL and title_is_displayed
-
-    @allure.title('Тест проверки перехода на главную страницу ДЗЕН по клику на логотип "Яндекс"')
-    @allure.description('''1)Нажимаем на логотип "Яндекс"
-                        2)Переходим на новую вкладку и ждем загрузку страницы
-                        3)Сравниваем текущий URL с ожидаемым''')
-    def test_yandex_logo_click(self, driver):
-        header_page = HomePageHeader(driver)
-        dzen_page = DzenPage(driver)
-        header_page.yandex_logo_click()
-        header_page.go_to_new_tab()
-        time.sleep(5)
-        current_url = header_page.get_current_url()
-        assert current_url == Urls.DZEN_URL and dzen_page.check_element_main_button()
-
-    @allure.title('Тест проверки текста ответов на вопросы на главной странице веб-приложения')
-    @allure.description('''1)Пролистываем до блока с вопросами;
-                        2)Нажимаем на вопрос;
-                        3)Получаем текст ответа на выбранный вопрос;
-                        4)Сравниваем полученный текст с ожидаемым''')
-    @pytest.mark.parametrize('question_locator, question_text_locator, expected_question_text', zip(HomePageLocators.questions, HomePageLocators.questions_text, Questions.expected_question_text))
-    def test_accordeon(self, driver, question_locator, question_text_locator, expected_question_text):
-        home_page = HomePage(driver)
-        text = home_page.get_text_question(question_locator, question_text_locator)
-        assert text == expected_question_text
+        assert header_page.get_current_url() == ORDER_PAGE
+        getattr(header_page, f'{name}_logo_click')()
+        header_page.switch_window(url)
+        assert header_page.get_current_url() == url

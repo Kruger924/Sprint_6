@@ -1,33 +1,22 @@
-import sys
-sys.path.append(".")
 import allure
-from data import Users
-from pages.home_page import HomePage, HomePageHeader
+import pytest
+
+from data import BOOKED, SCENARIO_1, SCENARIO_2
 from pages.order_page import OrderPage
 
 
 class TestOrderPage:
-
-    @allure.title('Позитивный тест оформления заказа по клику на кнопку "Заказать" в хедере')
-    @allure.description('''1)На главной странице в хедере нажимаем на кнопку "Заказать";
-                        2)Заполняем данные на странице "Для кого самокат' и нажимаем на кнопку "Далее";
-                        3)Заполняем данные "Про аренду" и нажимаем на кнопку "Заказать";
-                        4)Подтверждаем заказ и проверяем открытие окна с текстом оформления заказа''')
-    def test_order_scooter_by_order_button_from_header(self, driver):
-        header_page = HomePageHeader(driver)
+    @allure.title('Создание заказа')
+    @pytest.mark.parametrize(
+        'scenario',
+        [pytest.param(SCENARIO_1, id='Header button'),
+         pytest.param(SCENARIO_2, id='Main button')]
+    )
+    def test_create_order_with_button_header_or_main(self, driver, scenario):
+        '''Создание заказа с использованием кнопки «Заказать» в хэдере
+        и на главной странице.'''
+        page_obj, customer, rent = scenario
+        page_obj(driver).order_button_click()
         order_page = OrderPage(driver)
-        header_page.order_button_click()
-        order_page.order_scooter_full_path(Users.user)
-        assert order_page.check_order_title()
-
-    @allure.title('Позитивный тест оформления заказа по клику на кнопку "Заказать" на главной странице')
-    @allure.description('''1)На главной странице пролистываем до кнопки "Заказать" и нажимаем на нее;
-                        2)Заполняем данные на странице "Для кого самокат' и нажимаем на кнопку "Далее";
-                        3)Заполняем данные "Про аренду" и нажимаем на кнопку "Заказать";
-                        4)Подтверждаем заказ и проверяем открытие окна с текстом оформления заказа''')
-    def test_order_scooter_by_order_button_from_home_page(self, driver):
-        home_page = HomePage(driver)
-        order_page = OrderPage(driver)
-        home_page.scroll_and_click_on_the_order_button()
-        order_page.order_scooter_full_path(Users.user_2)
-        assert order_page.check_order_title()
+        order_page.create_order(customer, rent)
+        assert BOOKED in order_page.get_order_confirmed_title()

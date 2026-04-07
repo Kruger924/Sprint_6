@@ -1,30 +1,26 @@
 from selenium.webdriver.common.by import By
 
+from .patterns import BUTTON, DIV_CLS_CONTAINS, INPUT_FIELD, TEXT_IN_DIV
 
-class OrderPageLocators:
-    # Страница Для кого самокат
-    name_field = (By.XPATH, "//input[@placeholder = '* Имя']")
-    last_name_field = (By.XPATH, "//input[@placeholder = '* Фамилия']")
-    address_field = (By.XPATH, "//input[@placeholder = '* Адрес: куда привезти заказ']")
-    metro_station_field = (By.XPATH, "//input[@placeholder = '* Станция метро']")
-    metro = (By.XPATH, ".//div[text() = 'Черкизовская']")
-    telephone_field = (By.XPATH, "//input[@placeholder = '* Телефон: на него позвонит курьер']")
-    next_button = (By.XPATH, "//button[text() = 'Далее']")
+ORDER_FORM_TITLE = By.XPATH, DIV_CLS_CONTAINS.format('Order_Header')
 
-    # Страница Про аренду
-    deliver_order_field = (By.XPATH, ".//input[@placeholder='* Когда привезти самокат']")
-    rent_period_field = (By.XPATH, ".//span[@class='Dropdown-arrow']")
-    rent_period_three_days = (By.XPATH, ".//div[text() = 'трое суток']")
-    black_color_scooter_check = (By.ID, 'black')
-    gray_color_scooter_check = (By.ID, 'grey')
-    comment_field = (By.XPATH, ".//input[@placeholder= 'Комментарий для курьера']")
-    back_button = (By.XPATH, ".//button[text() = 'Назад']")
-    order_button = (By.XPATH, "(.//button[text() = 'Заказать'])[2]")
+# форма "Для кого самокат"
+NAME_FIELD = By.XPATH, INPUT_FIELD.format('* Имя')
+SURNAME_FIELD = By.XPATH, INPUT_FIELD.format('* Фамилия')
+ADDRESS_FIELD = By.XPATH, INPUT_FIELD.format('* Адрес: куда привезти заказ')
+METRO_FIELD = By.XPATH, INPUT_FIELD.format('* Станция метро')
+PHONE_FIELD = By.XPATH, INPUT_FIELD.format('* Телефон: на него позвонит курьер')
+NEXT_BTN = By.XPATH, BUTTON.format('Далее')
 
-    # Окно подтверждения заказа
-    no_button = (By.XPATH, ".//button[text() = 'Нет']")
-    yes_button = (By.XPATH, ".//button[text() = 'Да']")
+# форма "Про аренду"
+CONFIRM_ORDER_BTN = By.XPATH, DIV_CLS_CONTAINS.format('Order_Buttons') + BUTTON.format('Заказать')
+DELIVERY_DATE = By.XPATH, INPUT_FIELD.format('* Когда привезти самокат')
+DAYS = By.XPATH, TEXT_IN_DIV.format('* Срок аренды')
+COMMENT_FIELD = By.XPATH, INPUT_FIELD.format('Комментарий для курьера')
 
-    # Окно заказа
-    order_placed_text = (By.XPATH, ".//div[text() = 'Заказ оформлен']")
-    view_status_button = (By.XPATH, ".//button[text() = 'Посмотреть статус']")
+# окно Подтверждения заказа
+CONFIRMATION_TITLE = By.XPATH, TEXT_IN_DIV.format('Хотите оформить заказ?')
+YES_BTN = By.XPATH, BUTTON.format('Да')
+
+# окно Заказ оформлен
+ORDER_CONFIRMED_TITLE = By.XPATH, TEXT_IN_DIV.format('Заказ оформлен')

@@ -1,15 +1,15 @@
-import allure
 import pytest
 from selenium import webdriver
-from data import Urls
 
-@allure.step('Открытие браузера / переход на страницу / закрытие браузера')
-@pytest.fixture
+from data import MAIN_PAGE
+
+
+@pytest.fixture(scope='function')
 def driver():
-    driver = webdriver.Firefox()
-    driver.get(Urls.QA_SCOOTER_URL)
+    options = webdriver.FirefoxOptions()
+    options.add_argument('--width=1920')
+    options.add_argument('--height=1080')
+    driver = webdriver.Firefox(options=options)
+    driver.get(MAIN_PAGE)
     yield driver
     driver.quit()
-
-def pytest_make_parametrize_id(val):
-    return repr(val)

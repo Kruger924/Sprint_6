@@ -1,89 +1,114 @@
 import allure
-from locators.order_page_locators import OrderPageLocators
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+
+from data import CONFIRM_ORDER, RENT, SCOOTER_FOR
+from locators import order_page_locators as Loc
 from pages.base_page import BasePage
 
 
 class OrderPage(BasePage):
 
-    @allure.step('Заполнение поля Имя')
-    def send_name_to_name_field(self, text):
-        self.send_keys_to_field(OrderPageLocators.name_field, text)
+    @allure.step('Получение заголовка формы оформления заказа.')
+    def get_form_title(self):
+        '''Получение заголовка формы оформления заказа.'''
+        return self.get_element(Loc.ORDER_FORM_TITLE).text
 
-    @allure.step('Заполнение поля Фамилия')
-    def send_last_name_to_last_name_field(self, text):
-        self.send_keys_to_field(OrderPageLocators.last_name_field, text)
+    @allure.step('Заполнение поля «Имя» формы «Для кого самокат».')
+    def set_name(self, name):
+        '''Заполнение поля «Имя» формы «Для кого самокат».'''
+        self.fill_form_field(Loc.NAME_FIELD, name)
 
-    @allure.step('Заполнение поля Адрес')
-    def send_address_to_address_field(self, text):
-        self.send_keys_to_field(OrderPageLocators.address_field, text)
+    @allure.step('Заполнение поля «Фамилия» формы «Для кого самокат».')
+    def set_surname(self, surname):
+        '''Заполнение поля «Фамилия» формы «Для кого самокат».'''
+        self.fill_form_field(Loc.SURNAME_FIELD, surname)
 
-    @allure.step('Заполнение поля Станция метро')
-    def send_metro_station_to_metro_station_field(self, text):
-        self.click_button(OrderPageLocators.metro_station_field)
-        self.send_keys_to_field(OrderPageLocators.metro_station_field, text)
-        self.click_button(OrderPageLocators.metro)
+    @allure.step('Заполнение поля «Адрес» формы «Для кого самокат».')
+    def set_address(self, address):
+        '''Заполнение поля «Адрес» формы «Для кого самокат».'''
+        self.fill_form_field(Loc.ADDRESS_FIELD, address)
 
-    @allure.step('Заполнение поля Номер телефона')
-    def send_telephone_number_to_telephone_number_field(self, text):
-        self.send_keys_to_field(OrderPageLocators.telephone_field, text)
+    @allure.step('Заполнение поля «Метро» формы «Для кого самокат».')
+    def set_metro(self, metro):
+        '''Заполнение поля «Метро» формы «Для кого самокат».'''
+        self.fill_form_field(Loc.METRO_FIELD, metro, Keys.DOWN, Keys.ENTER)
 
-    @allure.step('Клик на кнопку Далее')
-    def click_on_the_next_button(self):
-        self.click_button(OrderPageLocators.next_button)
+    @allure.step('Заполнение поля «Телефон» формы «Для кого самокат».')
+    def set_phone(self, phone):
+        '''Заполнение поля «Телефон» формы «Для кого самокат».'''
+        self.fill_form_field(Loc.PHONE_FIELD, phone)
 
-    @allure.step('Заполнение данных на странице "Для кого самокат" и переход на сл.страницу "Про аренду"')
-    def complete_filling_of_the_who_is_scooter_form(self, user):
-        self.send_name_to_name_field(user[1])
-        self.send_last_name_to_last_name_field(user[2])
-        self.send_address_to_address_field(user[3])
-        self.send_metro_station_to_metro_station_field(user[4])
-        self.send_telephone_number_to_telephone_number_field(user[5])
-        self.click_on_the_next_button()
+    @allure.step('Нажатие кнопки «Далее» формы «Для кого самокат».')
+    def next_btn_click(self):
+        '''Нажатие кнопки «Далее» формы «Для кого самокат».'''
+        self.click_element(Loc.NEXT_BTN)
 
-    @allure.step('Заполнение поля Когда привезти заказ')
-    def send_deliver_to_deliver_order_field(self, text):
-        self.click_button(OrderPageLocators.deliver_order_field)
-        self.send_keys_to_field(OrderPageLocators.deliver_order_field, text)
+    def fill_customer_form(self, name, surname, address, metro, phone):
+        '''Заполнение всех полей формы «Для кого самокат»
+        и нажатие кнопки «Далее».'''
+        self.set_name(name)
+        self.set_surname(surname)
+        self.set_address(address)
+        self.set_metro(metro)
+        self.set_phone(phone)
+        self.next_btn_click()
 
-    @allure.step('Заполнение поля Срок аренды')
-    def period_time(self):
-        self.click_button(OrderPageLocators.rent_period_field)
-        self.click_button(OrderPageLocators.rent_period_three_days)
+    @allure.step('Заполнение поля «Когда привезти самокат» формы «Про аренду».')
+    def set_date(self, date):
+        '''Заполнение поля «Когда привезти самокат» формы «Про аренду».'''
+        self.fill_form_field(Loc.DELIVERY_DATE, date, Keys.ESCAPE)
 
-    @allure.step('Заполнение поля Цвет самоката')
-    def select_color_scooter(self):
-        self.click_button(OrderPageLocators.black_color_scooter_check)
+    @allure.step('Заполнение поля «Срок аренды» формы «Про аренду».')
+    def set_days(self, days):
+        '''Заполнение поля «Срок аренды» формы «Про аренду».'''
+        self.click_element(Loc.DAYS)
+        self.click_element((By.XPATH, Loc.TEXT_IN_DIV.format(days)))
 
-    @allure.step('Заполнение поля Комментарии для курьера')
-    def send_comment_to_comment_field(self, text):
-        self.send_keys_to_field(OrderPageLocators.comment_field, text)
+    @allure.step('Заполнение поля «Цвет самоката» формы «Про аренду».')
+    def set_color(self, color):
+        '''Заполнение поля «Цвет самоката» формы «Про аренду».'''
+        self.click_element((By.ID, color))
 
-    @allure.step('Клик на кнопку Заказать')
-    def click_order_button(self):
-        self.click_button(OrderPageLocators.order_button)
+    @allure.step('Заполнение поля «Комментарий для курьера» формы «Про аренду».')
+    def set_comment(self, comment):
+        '''Заполнение поля «Комментарий для курьера» формы «Про аренду».'''
+        self.fill_form_field(Loc.COMMENT_FIELD, comment)
 
-    @allure.step('Заполнение данных на странице "Про аренду" и переход к подтверждению заказа')
-    def complete_filling_of_the_about_rent_form(self, text):
-        self.send_deliver_to_deliver_order_field(text[6])
-        self.period_time()
-        self.select_color_scooter()
-        self.send_comment_to_comment_field(text[7])
-        self.click_order_button()
+    @allure.step('Нажатие кнопки «Заказать» формы «Про аренду».')
+    def confirm_btn_click(self):
+        '''Нажатие кнопки «Заказать» формы «Про аренду».'''
+        self.click_element(Loc.CONFIRM_ORDER_BTN)
 
-    @allure.step('Клик на кнопку Нет')
-    def cancel_order_scooter(self):
-        self.click_button(OrderPageLocators.no_button)
+    def fill_rent_form_and_confirm(self, date, days, color, comment):
+        '''Заполнение всех полей формы «Про аренду» и нажатие кнопки
+        «Заказать» для формирования заказа.'''
+        self.set_date(date)
+        self.set_days(days)
+        self.set_color(color)
+        self.set_comment(comment)
+        self.confirm_btn_click()
 
-    @allure.step('Клик на кнопку Да')
-    def confirm_order_scooter(self):
-        self.click_button(OrderPageLocators.yes_button)
+    @allure.step('Получение заголовка окна «Хотите оформить заказ».')
+    def get_confirmation_title(self):
+        '''Получение заголовка окна «Хотите оформить заказ».'''
+        return self.get_element(Loc.CONFIRMATION_TITLE).text
 
-    @allure.step('Заполнение формы "Для кого самокат", "Про аренду" и подтверждение заказа')
-    def order_scooter_full_path(self, user):
-        self.complete_filling_of_the_who_is_scooter_form(user)
-        self.complete_filling_of_the_about_rent_form(user)
-        self.confirm_order_scooter()
+    @allure.step('Нажатие кнопки «Да» окна «Хотите оформить заказ».')
+    def yes_btn_click(self):
+        '''Нажатие кнопки «Да» окна «Хотите оформить заказ».'''
+        self.click_element(Loc.YES_BTN)
 
-    @allure.step('Проверка отображения окна с текстом подтверждения заказа')
-    def check_order_title(self):
-        return self.find_and_wait_locator(OrderPageLocators.order_placed_text).is_displayed()
+    @allure.step('Получение заголовка окна «Заказ оформлен».')
+    def get_order_confirmed_title(self):
+        '''Получение заголовка окна «Заказ оформлен».'''
+        return self.get_element(Loc.ORDER_CONFIRMED_TITLE).text
+
+    def create_order(self, customer, rent):
+        '''Создание нового заказа.'''
+        assert self.get_form_title() == SCOOTER_FOR
+        self.fill_customer_form(**customer)
+        assert self.get_form_title() == RENT
+        self.fill_rent_form_and_confirm(**rent)
+        assert CONFIRM_ORDER in self.get_confirmation_title()
+        self.yes_btn_click()
