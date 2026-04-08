@@ -1,13 +1,11 @@
 import allure
 from selenium.webdriver.common.by import By
-
 from locators.patterns import BUTTON, DIV_CLS_CONTAINS
 from pages.base_page import BasePage
 
 
 class MainPage(BasePage):
-    ANSWER = By.XPATH, '//div[@id="accordion__panel-{}"]/p'
-    ANSWER_DISPLAY = By.XPATH, 
+    ANSWER = By.XPATH, '//div[@id="accordion__panel-{}"]/p' 
     QUESTION = By.ID, 'accordion__heading-{}'
     ORDER_BTN = By.XPATH, DIV_CLS_CONTAINS.format('FinishButton') + BUTTON.format('Заказать')
 

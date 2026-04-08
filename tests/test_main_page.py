@@ -1,5 +1,6 @@
 import allure
 import pytest
+import time
 
 from data import FAQ
 from pages.main_page import MainPage
@@ -14,5 +15,6 @@ class TestMainPage:
         assert main_page.get_question_text(num) == FAQ[num]['q']
         assert not main_page.check_answer_field_is_shown(num)
         main_page.question_click(num)
+        time.sleep(1)
         assert main_page.check_answer_field_is_shown(num)
         assert main_page.get_answer_text(num) == FAQ[num]['a']
