@@ -1,5 +1,6 @@
 import allure
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from locators.patterns import BUTTON, DIV_CLS_CONTAINS
 from pages.base_page import BasePage
 
@@ -40,3 +41,8 @@ class MainPage(BasePage):
     def check_answer_field_is_shown(self, num):
         '''Проверка отображения ответа на вопрос.'''
         return self.get_element(self.format_locator(num, self.ANSWER)).is_displayed()
+    
+    @allure.step('Ожидание видимости ответа на вопрос.')
+    def wait_for_answer_visibility(self, num):
+        '''Ожидание появления ответа на вопрос на странице.'''
+        self.wait_for(EC.visibility_of_element_located(self.format_locator(num, self.ANSWER)))

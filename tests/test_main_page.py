@@ -15,6 +15,6 @@ class TestMainPage:
         assert main_page.get_question_text(num) == FAQ[num]['q']
         assert not main_page.check_answer_field_is_shown(num)
         main_page.question_click(num)
-        time.sleep(1)
+        main_page.wait_for_answer_visibility(num)
         assert main_page.check_answer_field_is_shown(num)
         assert main_page.get_answer_text(num) == FAQ[num]['a']
