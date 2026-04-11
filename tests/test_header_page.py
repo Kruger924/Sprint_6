@@ -1,7 +1,7 @@
 import allure
 import pytest
 
-from data import MAIN_PAGE, ORDER_PAGE, DZEN
+from locators.urls import MAIN_PAGE, ORDER_PAGE, DZEN
 from pages.header_page import HeaderPage
 
 
