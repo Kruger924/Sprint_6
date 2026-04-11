@@ -1,6 +1,5 @@
 import allure
 import pytest
-import time
 
 from data import FAQ
 from pages.main_page import MainPage
