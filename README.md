@@ -10,7 +10,8 @@ conftest.py - файл с фикстурами
 data.py - файл с данными для проверок
 locators/ - каталог с файлами локаторов
 locators/patterns.py - файл с паттернами
-locators/order_page_locators.py - файл с локаторами 
+locators/order_page_locators.py - файл с локаторами
+locators/urls.py - файл с URL тестируемых страниц 
 pages/ - каталог с файлами страниц
 pages/base_page.py - файл с базовыми методами взаимодействия с элементами
 pages/header_page.py - файл с методами взаимодействия с элементами в хедера домашней страницей
